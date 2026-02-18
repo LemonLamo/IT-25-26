@@ -1,3 +1,4 @@
+
 # PART 1 — Node.js: Technical Definition
 
 ## What is Node.js?
@@ -8,10 +9,11 @@ Node.js is a runtime environment that allows you to run JavaScript outside the b
 
 ## What is a Runtime Environment?
 
-A **runtime environment** is the software layer that **executes your code** and provides everything it needs to run.
+A **runtime environment** is the software layer that **executes your code** and provides everything ineeds to run.
 
 It typically includes:
-- A **code interpreter or engine**
+
+- A **code interpreter or engine**
 - Memory management
 - Access to system resources (files, network, processes, etc.)
 
@@ -24,6 +26,7 @@ It typically includes:
 Node.js reacts to events instead of waiting for tasks to finish.
 
 **Example:**
+
 1. A request comes to a server
 2. Node.js processes it asynchronously
 3. While waiting for database or file operations, it handles other requests
@@ -35,11 +38,13 @@ This makes Node.js fast and scalable.
 Instead of stopping execution until a task finishes, Node.js continues running other tasks.
 
 **Blocking Example (Traditional):**
+
 ```
 Read file → Wait → Continue program
 ```
 
 **Non-Blocking Example (Node.js):**
+
 ```
 Start reading file → Continue program → File finishes later
 ```
@@ -49,6 +54,7 @@ Start reading file → Continue program → File finishes later
 ## Node.js Use Cases
 
 Node.js is commonly used for:
+
 - REST APIs
 - Microservices
 - Real-time systems
@@ -67,14 +73,14 @@ node -v
 npm -v
 ```
 
-- `node` → runs JavaScript files
-- `npm` → package manager for installing libraries
+- `node` → runs JavaScript files
+- `npm` → package manager for installing libraries
 
 ---
 
 ## Running Your First Node.js Script
 
-Create a file: `app.js`
+Create a file: `app.js`
 
 ```javascript
 console.log("Hello Node.js");
@@ -95,9 +101,10 @@ Node.js uses modules to organize code.
 ### Built-in Modules
 
 Examples:
-- `fs` → file system
-- `http` → create servers
-- `path` → manage file paths
+
+- `fs` → file system
+- `http` → create servers
+- `path` → manage file paths
 
 **Example using fs module:**
 
@@ -105,6 +112,25 @@ Examples:
 const fs = require("fs");
 
 fs.writeFileSync("test.txt", "Hello World");
+
+
+//reading message.txt
+
+const fs = require('fs');
+
+fs.readFile('message.txt', 'utf8', (err, data) => {
+
+    if (err) {  
+
+        console.error(err);
+
+        return;
+
+    }
+
+    console.log(data);
+
+});
 ```
 
 ### Custom Modules
@@ -112,17 +138,17 @@ fs.writeFileSync("test.txt", "Hello World");
 **math.js:**
 
 ```javascript
+  
 function add(a, b) {
-    return a + b;
+    return a + b;
 }
-
-module.exports = add;
+export default add;
 ```
 
 **app.js:**
 
 ```javascript
-const add = require("./math");
+import add from "./math.js";
 console.log(add(2, 3));
 ```
 
@@ -144,7 +170,7 @@ Install package:
 npm install express
 ```
 
-Dependencies are stored in: `package.json`
+Dependencies are stored in: `package.json`
 
 ---
 
@@ -153,14 +179,21 @@ Dependencies are stored in: `package.json`
 Example HTTP server:
 
 ```javascript
-const http = require("http");
-
+const http = require('http');
 const server = http.createServer((req, res) => {
-    res.write("Hello World");
-    res.end();
-});
 
-server.listen(3000);
+    res.statusCode = 200;
+
+    res.end('Hello World\n');
+
+});
+const PORT = 3000;
+
+server.listen(PORT, () => {
+
+    console.log(`Server running on port ${PORT}`);
+
+});
 ```
 
 Open browser:
@@ -185,27 +218,30 @@ Node.js uses callbacks heavily because many operations (file reading, database q
 
 Node.js does not wait for long operations. Instead, it says:
 
-*"Start this task and call this function when you're done."*
+_"Start this task and call this function when you're done."_
 
 ### Basic Example
 
 ```javascript
-function greet(name, callback) {
-    console.log("Hello " + name);
-    callback();
+function fetchData(callback) {
+    setTimeout(() => {
+        console.log("Data received");
+        callback();
+    }, 2000);
 }
 
-function sayBye() {
-    console.log("Goodbye");
+function processData() {
+    console.log("Processing data...");
 }
 
-greet("Lamia", sayBye);
+fetchData(processData);
+
 ```
 
 **Execution:**
+
 ```
-Hello Lamia
-Goodbye
+
 ```
 
 ### Real Node.js Example (File Reading)
@@ -223,7 +259,8 @@ fs.readFile("test.txt", "utf8", (err, data) => {
 ```
 
 Here:
-- `readFile` starts reading
+
+- `readFile` starts reading
 - When finished → callback executes
 
 ### Callback Problem: Callback Hell
@@ -241,6 +278,7 @@ doTask1(() => {
 ```
 
 **Problems:**
+
 - Hard to read
 - Hard to debug
 - Hard to maintain
@@ -259,9 +297,9 @@ It is an object that tracks the state of an async operation.
 
 ### Promise States
 
-- **Pending** → still running
-- **Fulfilled** → success
-- **Rejected** → error
+- **Pending** → still running
+- **Fulfilled** → success
+- **Rejected** → error
 
 ### Creating a Promise
 
@@ -318,12 +356,11 @@ This already solves callback hell significantly.
 
 ### Definition
 
-Async/await is syntactic sugar built on top of Promises.
-It makes asynchronous code look synchronous.
+Async/await is syntactic sugar built on top of Promises. It makes asynchronous code look synchronous.
 
 ### Async Function
 
-Declaring a function as `async` automatically makes it return a Promise.
+Declaring a function as `async` automatically makes it return a Promise.
 
 ```javascript
 async function hello() {
@@ -333,17 +370,19 @@ async function hello() {
 
 ### Await Keyword
 
-`await` pauses execution until a Promise resolves.
+`await` pauses execution until a Promise resolves.
 
 ### Example
 
 **Using Promises:**
+
 ```javascript
 fetchData()
    .then(data => console.log(data));
 ```
 
 **Using Async/Await:**
+
 ```javascript
 async function getData() {
     const data = await fetchData();
@@ -384,6 +423,7 @@ The Event Loop is what allows Node.js to be non-blocking.
 Node.js runs on one main thread.
 
 Instead of creating new threads for each task, it uses:
+
 - Event queue
 - Callback queue
 - Event loop scheduler
@@ -391,11 +431,13 @@ Instead of creating new threads for each task, it uses:
 ### How It Works Step-by-Step
 
 **Step 1 — Code runs in Call Stack**
+
 - Synchronous code executes immediately
 
 **Step 2 — Async tasks go to Background**
 
 Examples:
+
 - File reading
 - Database queries
 - Timers
@@ -428,9 +470,10 @@ Timeout finished
 **Why?**
 
 Because:
-1. `Start` executes
-2. `setTimeout` registers async timer
-3. `End` executes immediately
+
+1. `Start` executes
+2. `setTimeout` registers async timer
+3. `End` executes immediately
 4. After 2 seconds → callback enters queue
 5. Event loop executes it
 
@@ -445,6 +488,7 @@ Because:
 npm is the dependency manager for Node.js.
 
 It allows you to:
+
 - Install external libraries
 - Manage project dependencies
 - Run scripts
@@ -452,11 +496,13 @@ It allows you to:
 - Share and reuse code modules
 
 Think of npm as:
+
 > The ecosystem that provides tools so you don't have to write everything from scratch.
 
 ### Why npm Exists (In Async Context)
 
 Node.js core is minimal. Most advanced features like:
+
 - HTTP frameworks
 - Database connectors
 - Authentication tools
@@ -464,33 +510,40 @@ Node.js core is minimal. Most advanced features like:
 
 are installed via npm.
 
-**Example:**
-Instead of writing your own HTTP routing logic, you install a framework.
+**Example:** Instead of writing your own HTTP routing logic, you install a framework.
 
 ### Basic npm Commands
 
 **Initialize Project:**
+
 ```bash
 npm init
 ```
-Creates the `package.json` file.
+
+Creates the `package.json` file.
 
 **Install Dependency:**
+
 ```bash
 npm install express
 ```
+
 Installs library locally.
 
 **Install Dev Dependency:**
+
 ```bash
 npm install nodemon --save-dev
 ```
+
 Used only during development.
 
 **Install Global Package:**
+
 ```bash
 npm install -g nodemon
 ```
+
 Accessible across system.
 
 ---
@@ -499,9 +552,10 @@ Accessible across system.
 
 ### What It Is
 
-`package.json` is the central configuration file of a Node.js project.
+`package.json` is the central configuration file of a Node.js project.
 
 It describes:
+
 - Project metadata
 - Dependencies
 - Scripts
@@ -531,6 +585,7 @@ It describes:
 ### Important Sections
 
 #### 1️⃣ Metadata
+
 - `name`
 - `version`
 - `description`
@@ -549,9 +604,10 @@ Defines application entry point.
 
 #### 3️⃣ Dependencies
 
-`"dependencies"` — Libraries required in production.
+`"dependencies"` — Libraries required in production.
 
 Example:
+
 - Express
 - Database drivers
 - Authentication libraries
@@ -559,6 +615,7 @@ Example:
 #### 4️⃣ devDependencies
 
 Used only during development:
+
 - Testing tools
 - Hot reload tools
 - Linters
@@ -568,6 +625,7 @@ Used only during development:
 Scripts allow running commands easily.
 
 Example:
+
 ```bash
 npm run start
 npm run dev
@@ -579,6 +637,7 @@ They are shortcuts for automation.
 ### Why package.json Matters for Async Node Apps
 
 It guarantees:
+
 - Reproducible environments
 - Correct dependency versions
 - Standardized project setup
@@ -593,6 +652,7 @@ node_modules/
 ```
 
 Contains:
+
 - Installed libraries
 - Their dependencies
 
@@ -603,6 +663,7 @@ Usually very large and never committed to git.
 Automatically generated file.
 
 **Purpose:**
+
 - Locks exact dependency versions
 - Ensures identical installations across machines
 
@@ -614,9 +675,10 @@ Now this is where security + configuration management enters.
 
 ### What .env Files Are
 
-`.env` files store environment variables.
+`.env` files store environment variables.
 
 They hold sensitive or environment-specific data like:
+
 - Database passwords
 - API keys
 - JWT secrets
@@ -625,13 +687,14 @@ They hold sensitive or environment-specific data like:
 
 ### Why They Are Needed
 
-You should **NEVER** hardcode secrets like:
+You should **NEVER** hardcode secrets like:
 
 ```javascript
 const password = "mypassword123";
 ```
 
 **Because:**
+
 - Security risk
 - Hard to change across environments
 - Cannot safely share code
@@ -653,11 +716,13 @@ npm install dotenv
 ```
 
 **Load Environment Variables:**
+
 ```javascript
 require("dotenv").config();
 ```
 
 **Access Variables:**
+
 ```javascript
 const port = process.env.PORT;
 ```
@@ -668,24 +733,25 @@ const port = process.env.PORT;
 
 Node apps usually run in multiple environments:
 
-| Environment | Purpose |
-|------------|---------|
-| Development | Local machine |
-| Testing | QA validation |
-| Production | Live deployment |
+|Environment|Purpose|
+|---|---|
+|Development|Local machine|
+|Testing|QA validation|
+|Production|Live deployment|
 
 Each environment has different:
+
 - Credentials
 - Ports
 - Service URLs
 
-`.env` allows switching without changing code.
+`.env` allows switching without changing code.
 
 ---
 
 ## 5. Security Best Practice
 
-Always add `.env` to:
+Always add `.env` to:
 
 ```
 .gitignore
